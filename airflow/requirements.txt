@@ -1,0 +1,4 @@
+pandas
+pymysql
+requests
+google-cloud-storage

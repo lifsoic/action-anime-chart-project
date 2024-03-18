@@ -1,0 +1,2 @@
+FROM mysql:8.3
+ENV MYSQL_DATABASE anime_db
