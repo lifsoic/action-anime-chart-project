@@ -2,11 +2,8 @@ from airflow import DAG
 from airflow.utils.dates import days_ago
 from datetime import timedelta
 from airflow.operators.python_operator import PythonOperator
-from airflow.providers.mysql.hooks.mysql import MySqlHook
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
-
-from airflow.operators.dummy_operator import DummyOperator      # for demo only
 
 import requests
 import pandas as pd
@@ -163,7 +160,7 @@ def query_anime(startPage, main_path, tags_path, rankings_path):
     print('-----------------------------------')
     
     #save result_df to csv file to any path
-    result_file_name = f'{page_id}_result_df.csv'                      # result_df.csv file name
+    result_file_name = f'{page_id}_result_df.csv'                      
     result_df.to_csv(f"{main_path}{result_file_name}", index=False)
 
     check_hasNextPage = results['data']['Page']['pageInfo']['hasNextPage']  # Add  for check hasNextPage == False
@@ -404,10 +401,6 @@ del_temp = PythonOperator(
     dag=dag,
 )
 
-'''del_temp = DummyOperator(
-    task_id='del_temp',      
-    dag=dag,
-)'''
 
 # Dependencies
 

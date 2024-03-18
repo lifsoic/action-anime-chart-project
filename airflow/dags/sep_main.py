@@ -396,10 +396,6 @@ del_temp = PythonOperator(
     dag=dag,
 )
 
-'''del_temp = DummyOperator(
-    task_id='del_temp',      
-    dag=dag,
-)'''
 
 # Dependencies
 
