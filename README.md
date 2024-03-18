@@ -1,5 +1,7 @@
 # Under development
 
-"""
-test snipping code
-"""
+```python
+def test_code_block(x):
+  t = test + x
+  return t
+```
