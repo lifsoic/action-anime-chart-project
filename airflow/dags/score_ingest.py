@@ -15,17 +15,16 @@ import shutil
 
 default_args = {
     'owner': 'Alif',
-    'depends_on_past': False,
-    'catchup' : False,
     'start_date': days_ago(1),
     'retries': 1,
     'retry_delay': timedelta(seconds=5),
+    'schedule_interval' : None,
 }
 
 # Create DAG
 
 dag = DAG(
-    'daily_score_fecth',
+    'Daily_score_fecth',
     default_args=default_args,
     description='Fecth score Data from Anilist database API daily',
     schedule_interval=None,
