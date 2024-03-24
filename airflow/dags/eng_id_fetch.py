@@ -9,6 +9,7 @@ import pandas as pd
 import time
 import os
 import pymysql
+import shutil
 
 # Default Args
 
@@ -35,9 +36,10 @@ get_hasNextPage = True                                  # For default start
 startPage = 1                                           # Customize your first page
 api_lim = 25                                            # api request call limit (30), 1 page per 1 request
 api_last_page = 200                                     # customize your last page 
-result_path = '/home/airflow/data/loop_id/'             # result of all fetch files
-source_path = result_path                               # source of merge file funtion 
-destination_path = '/home/airflow/data/'                # merge file location
+temp_path = '/home/airflow/data/temp/'                  # temporary results path folder
+result_path = f'{temp_path}Eng/loop/'                   # result of all fetch files
+source_path = result_path                               # source of merge file funtion
+path_list = [temp_path, source_path]
 merge_file_name = 'merge_id.csv'                        # merge file name
 table_name = 'engTitle'                                 # assign table name
 
@@ -105,6 +107,9 @@ def query_anime(startPage, result_path):
     result_df.to_csv(f"{result_path}{result_file_name}", index=False)
 
     check_hasNextPage = results['data']['Page']['pageInfo']['hasNextPage']  #Add  for check hasNextPage == False
+
+    # For check data type
+    print(result_df.info())
 
     return check_hasNextPage, r.status_code
 
@@ -174,8 +179,30 @@ def insert_data_to_mysql(destination_path, merge_file_name, table_name):
         connection.commit()
         cursor.close()        
 
+def create_temp(path_list):
+    
+    for i in path_list:
+        os.makedirs(i, exist_ok=True)
+
+        print(f'Directory : {i} has been created')
+
+def delete_temp(path):
+    
+    shutil.rmtree(path)
+
+    print(f'All files in {path} was deleted')
+
 
 # Tasks
+
+crea_temp = PythonOperator(
+    task_id='create_temp_tree_folder',
+    python_callable=create_temp,
+    op_kwargs={
+            "path_list" : path_list,
+        },
+    dag=dag,
+)
 
 t1 = PythonOperator(
     task_id='Loop_query_id_and_title',
@@ -195,7 +222,7 @@ t2 = PythonOperator(
     python_callable=concatenate_and_transfer_files,
     op_kwargs={
             "source_path": source_path,
-            "destination_path": destination_path,
+            "destination_path": f'{temp_path}Eng/',
             "merge_file_name" : merge_file_name,
         },
     dag=dag,
@@ -203,7 +230,7 @@ t2 = PythonOperator(
 
 t3 = MySqlOperator(
     task_id='create_table',
-    mysql_conn_id='mysql_con',          # Replace with your MySQL connection ID
+    mysql_conn_id='mysql_default',          # Replace with your MySQL connection ID
     sql=f"""CREATE TABLE IF NOT EXISTS {table_name} (id INT, engTitle VARCHAR(255))""",
     dag=dag,
 )
@@ -212,14 +239,24 @@ t4 = PythonOperator(
     task_id='insert_data_to_MySQL',
     python_callable=insert_data_to_mysql,
     op_kwargs={
-            "destination_path": destination_path,
+            "destination_path": f'{temp_path}Eng/',
             "merge_file_name" : merge_file_name,
             "table_name" : table_name,
         },
     dag=dag,
 )
 
+del_temp = PythonOperator(
+    task_id='del_temp',
+    python_callable=delete_temp,
+    op_kwargs = {
+        'path' : temp_path,
+    },      
+    dag=dag,
+)
 
 # Dependencies
 
-[t3, t1 >> t2] >> t4
+crea_temp >> [t3, t1]
+t1 >> t2
+[t3, t2] >> t4 >> del_temp
