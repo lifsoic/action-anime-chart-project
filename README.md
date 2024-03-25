@@ -263,13 +263,13 @@ In this project, Airflow will run within a Docker Compose environment using a cu
 
 Go to “Admins” tab and choose “Connections” tab. Click add a new record and fill by below
 
->Connection Id: mysql_con
->Connection Type: MySQL
->Host: mysql_con
->Schema: anime_db
->Login: root
->Pass: yourpassword
->Port: 3306
+- Connection Id: mysql_con
+- Connection Type: MySQL
+- Host: mysql_con
+- Schema: anime_db
+- Login: root
+- Pass: yourpassword
+- Port: 3306
 
 ### GCP Connection
 
@@ -277,12 +277,12 @@ Before make GCP connection you need to have GCP account. Then create your projec
 
 Go to “Admins” tab and choose “Connections” tab. Click add a new record and fill by below
 
->Connection Id: google_cloud_default # must be this name
->Connection Type: Google Cloud
->Project Id: anime-chart-data #your GCP project name
->Keyfile Path: /home/airflow/data/key.json # your json key path
->Scopes (comma separated):  https://www.googleapis.com/auth/cloud-platform
->Number of Retries: 5
+- Connection Id: google_cloud_default # must be this name
+- Connection Type: Google Cloud
+- Project Id: anime-chart-data #your GCP project name
+- Keyfile Path: /home/airflow/data/key.json # your json key path
+- Scopes (comma separated):  https://www.googleapis.com/auth/cloud-platform
+- Number of Retries: 5
 
 **Important:** "*google_cloud_default*" must be this name and "*anime-chart-data*" is your GCP project name
 
