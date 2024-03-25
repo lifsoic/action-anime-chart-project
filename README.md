@@ -121,7 +121,7 @@ To connect between MySQL and Airflow, we need to create a bridge network.
 3. Connect the network to the MySQL container (`mysql_con`):
     
     ```bash
-    docker connect mysql_airflow_bridge mysql_con
+    docker network connect mysql_airflow_bridge mysql_con
     ```
     
 4. Confirm the connection:
@@ -263,7 +263,7 @@ In this project, Airflow will run within a Docker Compose environment using a cu
 
 Go to “Admins” tab and choose “Connections” tab. Click add a new record and fill by below
 
-- Connection Id: mysql_con
+- Connection Id: mysql_default
 - Connection Type: MySQL
 - Host: mysql_con
 - Schema: anime_db
