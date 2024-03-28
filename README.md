@@ -277,10 +277,10 @@ Before make GCP connection you need to have GCP account. Then create your projec
 
 Go to “Admins” tab and choose “Connections” tab. Click add a new record and fill by below
 
-- Connection Id: google_cloud_default # must be this name
+- Connection Id: google_cloud_default
 - Connection Type: Google Cloud
-- Project Id: anime-chart-data #your GCP project name
-- Keyfile Path: /home/airflow/data/key.json # your json key path
+- Project Id: anime-chart-data
+- Keyfile Path: /home/airflow/data/key.json
 - Scopes (comma separated):  https://www.googleapis.com/auth/cloud-platform
 - Number of Retries: 5
 
@@ -322,7 +322,6 @@ This optional DAG is designed for daily or weekly scheduled data fetching (curre
   <img width="1154" height="246" src="daily-sep.png">
 </p>
 
-An optional DAG for daily schedule. This DAG fetch about numerical and string data that daily change. Run this DAG everyday will keep your chart to be fresh. And also tasks look same as “*Main_data_fetch”* but split only “*tags”*, “*rankings”*, and “*main”* (numerical data).
 
 This optional DAG is intended for daily scheduled execution. It fetches data that changes daily, consisting of both numerical and string values. Running this DAG daily helps maintain the freshness of your charts. The tasks are similar to "Main_data_fetch," but they split only "*tags*", "*rankings*" and the numerical portion of "*main*" data.
 
